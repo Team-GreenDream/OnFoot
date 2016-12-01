@@ -13,3 +13,10 @@ build
 .DS_Store
 .env
 npm-debug.log
+
+
+
+# google api key
+
+server/env/config.js
+
