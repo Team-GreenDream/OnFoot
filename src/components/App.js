@@ -8,7 +8,8 @@ import getAPI from './lib/getImageAPI.js'
 import List from './List';
 import Directions from './Directions';
 import Loading from './Loading';
-import data from './data/data.js';
+import getMap from './lib/getMap.js';
+import Mapimage from './Mapimage';
 
 class App extends Component {
   constructor (props) {
@@ -22,7 +23,9 @@ class App extends Component {
       hideButton: false,
       showDirections: false,
       directions: undefined,
-      imageAPI:undefined
+      imageAPI:undefined,
+      link:undefined,
+      showMap:false
     };
   }
 
@@ -44,7 +47,6 @@ class App extends Component {
         this.getNearbyRestaurants({location:this.state.latlong});
         //getAddress will take our longitude and latitude and find the nearest address to us
         getAddress({latlng:this.state.latlong},((location)=>{
-          console.log(location)
           //the location state will update each time this is run
           //split data into variables to increase readability
           var streetNum  = location[0].long_name
@@ -92,6 +94,13 @@ class App extends Component {
       this.setState({directions:steps});
       this.setState({showList:false});
       this.setState({showDirections:true});
+      //call get map since its reliant on what getDirections returns
+      getMap({waypoints:steps.routes[0].legs},(map)=>{
+        //update our state so it contains the url we want and can then pass down to an img tag
+        this.setState({link:`${map}`})
+        //sets our showMap to true so we know the map is available to show
+        this.setState({showMap:true})
+      })
     })
 
   }
@@ -112,6 +121,10 @@ class App extends Component {
           <List data={data} API={api} showDirections={this.state.showDirections} displayDirections={this.displayDirections.bind(this)}/> : null
         }
 
+        {
+          this.state.showMap ?
+            <Mapimage link={this.state.link}/> : null
+        }
         {
           //check if showDirections is true then call the Directions component
           this.state.showDirections ?

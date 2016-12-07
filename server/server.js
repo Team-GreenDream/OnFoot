@@ -96,6 +96,16 @@ app.get('/fetchAddress/:latlng',function(req,res){
     }
   })
 })
+app.get('/fetchmap/:start/:end/:waypoints',function(req,res) {
+  var start = req.params.start
+  var end = req.params.end
+  var waypoints = req.params.waypoints
+  var staticMapKey = process.env.staticMapKey || googleAPI.staticMapKey
+  //we're basically just building a url with what we're passed
+  var image = `https://maps.googleapis.com/maps/api/staticmap?size=600x300&path=${waypoints}&markers=label:A%7C${start}&markers=label:B%7C${end}&key=${staticMapKey}`
+  res.send(image);
+  })
+//})
 // app.listen(port,ip);
 // console.log("Listening on port :", port);
 app.listen(port);
