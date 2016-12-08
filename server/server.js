@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 //need to import request module for ajax call
 var request = require('request')
 var path = require('path');
-//var credentials = require('./env/config.js')
+// credentials = require('./env/config.js')
 var createSession = require('./util.js');
 
 
@@ -147,7 +147,7 @@ app.get('/fetchData/:location',function(req,res){
   location = req.params.location
   var url='https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius=1500&types=restaurant%7Cgas_station%7C&sensor=false'
 
-  console.log("passs 1");
+  console.log("pass 1");
   request(`${url}&location=${location}&key=${mapKey}`, function (error, response, body) {
     console.log(error);
     if (!error && response.statusCode == 200) {
