@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 //need to import request module for ajax call
 var request = require('request')
 var path = require('path');
-//var credentials = require('./env/config.js')
+// credentials = require('./env/config.js')
 var createSession = require('./util.js');
 
 
@@ -74,7 +74,7 @@ app.get('/auth/facebook',
   function(req, res){});
 
 app.get('/auth/facebook/callback',
-  passport.authenticate('facebook', { authType: 'reauthenticate',failureRedirect: '/' }),
+  passport.authenticate('facebook', { failureRedirect: '/' }),
   function(req, res) {
     console.log("req",req.user);
     User.findOne({id:req.user.id}).exec(function(err,found){
@@ -142,15 +142,51 @@ app.get('/', function(req,res){
 })
 
 // api call for google maps and modifies it to use our current location
-app.get('/fetchData/:location',function(req,res){
-  var mapKey = process.env.mapKey || credentials.mapKey
-  location = req.params.location
-  var url='https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius=1500&types=restaurant%7Cgas_station%7C&sensor=false'
 
-  console.log("passs 1");
+app.get('/fetchData/:location/:radius',function(req,res){
+  var mapKey = process.env.mapKey || credentials.mapKey
+  var location = req.params.location
+   console.log('Request?', req.params);
+   let radius = req.params.radius;
+     //Data validation.
+  if (radius < 250 ) {radius = 250};
+  if (radius > 3000) {radius = 3000};
+  //query starts after 'json', which defines the format of returned data
+    //  mapKey from config.js = API key.
+    //  radius = distance in meters
+    //  types = restaurant/gas_station/etc
+    // %7Cgas_station%7C&sensor=false
+  //var url='https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius=1500&types=restaurant'
+  var url='https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius=3000&types=restaurant';
   request(`${url}&location=${location}&key=${mapKey}`, function (error, response, body) {
     console.log(error);
     if (!error && response.statusCode == 200) {
+      console.log(body);
+      res.json(body);
+    }
+  })
+})
+
+//As above, but will accept a 'distance' value with which to set the search.
+app.get('/variableDistanceSearch/:location/:distance',function(req,res){
+  var mapKey = process.env.mapKey || credentials.mapKey
+  console.log('Distance request?', req.params);
+  location = req.params.location
+  distance = req.params.distance;
+  //Data validation.
+  if (distance < 250 ) {distance = 250};
+  if (distance > 3000) {distance = 3000};
+  //query starts after 'json', which defines the format of returned data
+    //  mapKey from config.js = API key.
+    //  radius = distance in meters
+    //  types = restaurant/gas_station/etc
+    // %7Cgas_station%7C&sensor=false
+  //var url='https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius='+distance+'&types=restaurant';
+  var url='https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius=3000&types=restaurant';
+  request(`${url}&location=${location}&key=${mapKey}`, function (error, response, body) {
+    console.log(error);
+    if (!error && response.statusCode == 200) {
+      console.log('body?', body);
       res.json(body);
     }
   })
@@ -187,6 +223,18 @@ app.get('/fetchAddress/:latlng',function(req,res){
   })
 })
 
+app.get('/fetchLatLong/:address', (req, res) => {
+  var mapKey = process.env.mapKey || credentials.mapKey;
+  let address = req.params.address;
+  let url = 'https://maps.googleapis.com/maps/api/geocode/json?'
+  request(`${url}&address=${address}&key=${mapKey}`, (err, response, body) => {
+    console.log(err);
+    if (!err && response.statusCode == 200) {
+      res.json(body);
+    }
+  })
+})
+
 
 app.get('/username', function(req, res){
   console.log("user",req.session.userID);
@@ -196,17 +244,23 @@ app.get('/username', function(req, res){
   })
 })
 
-app.post('/checkList/:id/:name', function(req, res){
+app.post('/saveRestaurant', function(req, res){
+  console.log("We are reaching server.js")
   var user = req.session.userID;
-  var placeId = req.params.id;
-  var placeName = req.params.name;
-  console.log(user,placeId,placeName);
-  User.findOneAndUpdate({id:user},{$push:{"checkList":{placeIdid:placeId, place: placeName }}},
+  console.log("Here is the request body!!!!!!!!!!!!!", req.body)
+  var place_id = req.body.place_id;
+  var name = req.body.name;
+  var rating = req.body.rating;
+  var price_level = req.body.price_level;
+  var vicinity = req.body.vicinity;
+  var geometry = req.body.geometry;
+  //console.log("THE STUFF! ---->", user,place_id,name, rating, price_level, vicinity);
+  User.findOneAndUpdate({id:user},{$push:{"checkList":{place_id:place_id, name:name, rating:rating, price_level:price_level, vicinity:vicinity, geometry:geometry, notes:null }}},
     {safe: true, upsert: true, new : true},
-         function(err, model) {
-             console.log(err);
-             res.send("success");
-         }
+      function(err, model) {
+        console.log(err);
+        res.send("success");
+       }
   )
 })
 

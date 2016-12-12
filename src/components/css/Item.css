@@ -1,14 +1,162 @@
-.direction-btn {
-  background-color: #1AA1BC;
-}
-.direction-btn:hober {
-  background-color: #1AA1BF;
+.list-location {
+
 }
 
-.try-btn {
+.list-location ul {
+  padding: 0;
+  margin: 0;
+}
+
+.list-location ul li {
+  display: flex;
+  list-style: none;
+}
+
+.list-location-cont {
+  position: relative;
+  margin-bottom: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.list-location-cont h3 {
+  text-align: center;
+}
+
+.list-location-cont a {
+  color: #fff;
+}
+
+.list-location-img {
+  width: 100%;
+}
+
+.list-location-icon {
+  position: absolute;
+}
+
+.list-location-info {
+  text-align: center;
+}
+
+.list-location-info > div {
+  padding: 0 15px 15px;
+}
+
+.list-location-info p {
+
+}
+
+.list-location-info h3 {
+  min-height: 65px;
+  margin-top: 10px;
+  line-height: 28px;
+}
+
+.list-location-address {
+  min-height: 37px;
+  font-weight: 500;
+  font-size: 19px;
+  line-height: 18px;
+}
+
+.list-location-button {
+  display: block;
+  width: 75%;
+  margin: 0 auto 10px;
+  padding: 6px 16px;
+  color: #fff;
+  text-transform: uppercase;
   background-color: #eb2d53;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  transition: all .2s;
 }
 
-.try-btn:hover {
-  background-color: #eb2d56;
+.list-location-button:hover {
+  background-color: #e5284d;
+}
+
+a.list-location-button {
+  text-decoration: none;
+}
+
+.list-location .list-location-button:last-child {
+  margin-bottom: 0;
+}
+
+.ribbon.icon {
+  font-size: 18px;
+}
+
+.ribbon {
+  position: absolute;
+  top: 0;
+  right: -11px;
+  padding: 5px 10px;
+  text-align: center;
+  z-index: 2;
+  background: #67c;
+  color: #fff;
+  min-width: 70px;
+}
+
+.ribbon:before {
+  position: absolute;
+  right: 3px;
+  bottom: -8px;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  border-color: rgba(136, 183, 213, 0);
+  border-top-color: #ccc;
+  pointer-events: none;
+  border-width: 8px;
+  -ms-transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+  transform: rotate(135deg);
+}
+.red-circle {
+  border-radius:50%;
+  background-color:red;
+  height:14px;
+  width:14px;
+   margin-left:4px;
+}
+.green-circle {
+  border-radius:50%;
+  background-color:green;
+  height:14px;
+  width:14px;
+  margin-left:4px;
+}
+.circle-container {
+  width:120px;
+  margin:0 auto;
+}
+
+.circle-container div {
+  display: inline-block;
+}
+
+.modal-header h4 {
+  margin-bottom: 15px;
+  font-size: 3.5rem;
+}
+
+.modal-header .close {
+  position: absolute;
+  top: 3px;
+  right: 10px;
+}
+
+.modal-inside {
+  margin-top: 20px;
+}
+
+.modal-inside div > div {
+  margin-bottom: 15px;
+  font-size: 1.5rem;
 }

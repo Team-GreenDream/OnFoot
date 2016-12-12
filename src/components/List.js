@@ -1,27 +1,36 @@
+//Shows the restaurants found with the appropriate search by rendering one instance of item for each of them.
 import React from 'react';
 import './css/List.css';
 
 import Item from './Item';
 
-const List = ({data, isLogin, showDirections, displayDirections, API}) => {
-
+const List = ({dollars, radius, data, isLogin, showSaveRestaurants, displayDirections, API, objLatLng}) => {
   return (
-    <div className="list">
-        <div className="list-header-container"><h3>Top-rated restaurants near you</h3></div>
-         <main role="main">
-          <ul className="flexgrid columns-news">
-
-        {
-          data === undefined ? null :
-          //filters the data right here
-            data.results.filter(result => result.rating >= 3.9 && result.price_level < 3)
+    <div className='container list'>
+      <div className='row list-header'>
+        <h2 className='col-xs'>Restaurants Near You</h2>
+     </div>
+      <div className='container list-location'>
+        <ul className='row'>
+          {
+            data === undefined || null ? <h4>Finding results...</h4> :
+            //filters the data right here
+            // Renders one Item for data in the list.
+            //data.results.filter(result => result.rating >= 3.0 && result.price_level <= dollars)
+            data.results.filter(result => {
+              
+              let distance = google.maps.geometry.spherical.computeDistanceBetween(new google.maps.LatLng(parseFloat(objLatLng.lat), parseFloat(objLatLng.lng)), new google.maps.LatLng(parseFloat(result.geometry.location.lat), parseFloat(result.geometry.location.lng)));
+              if (distance <= radius && result.price_level <= dollars)
+                return true
+              else
+                return false
+            })
             .map((result) =>
-            <Item item={result} API={API} isLogin={isLogin} showDirections={showDirections} displayDirections={displayDirections}/>
+              <Item item={result} API={API} isLogin={isLogin} displayDirections={displayDirections}/>
             )
-        }
-
+          }
         </ul>
-      </main>
+      </div>
     </div>
   );
 };
